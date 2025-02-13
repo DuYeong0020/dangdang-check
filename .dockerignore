@@ -1,6 +1,5 @@
 # 빌드 결과물 제외 (빌드 후 JAR 파일만 포함)
 target/
-build/
 
 # IDE 관련 파일 제외
 *.iml
