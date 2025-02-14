@@ -13,6 +13,9 @@ services:
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: 1234
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      LOGGING_FILE_NAME: /app/logs/app.log  # 로그 파일 위치 설정
+    volumes:
+      - /home/ubuntu/logs:/app/logs  # 로그 파일을 EC2에 저장
     networks:
       - my_network
 
@@ -28,6 +31,9 @@ services:
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: 1234
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      LOGGING_FILE_NAME: /app/logs/app.log
+    volumes:
+      - /home/ubuntu/logs:/app/logs  # 동일하게 로그 저장
     networks:
       - my_network
 
