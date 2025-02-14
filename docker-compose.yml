@@ -1,11 +1,26 @@
 version: "3.8"
 
 services:
-  app:
+  app_blue:
     build: .
-    container_name: dangdang_check_app
+    container_name: dangdang_check_app_blue
     ports:
-      - "8080:8080"
+      - "8081:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/dangdang_check?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - my_network
+
+  app_green:
+    build: .
+    container_name: dangdang_check_app_green
+    ports:
+      - "8082:8080"
     depends_on:
       - db
     environment:
