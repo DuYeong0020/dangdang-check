@@ -26,7 +26,7 @@ jobs:
             cd ~/dangdang-check
             git pull origin main
 
-            # 현재 활성화된 컨테이너 확인
+            # 현재 실행 중인 컨테이너 확인
             ACTIVE_VERSION=$(docker ps --format '{{.Names}}' | grep -E 'dangdang_check_app_blue|dangdang_check_app_green' || true)
 
             if [ -z "$ACTIVE_VERSION" ]; then
@@ -36,71 +36,71 @@ jobs:
               echo "새로운 Blue 컨테이너 상태 확인 중..."
               for i in {1..10}; do
                 sleep 3
-                if docker ps | grep -q "dangdang_check_app_blue"; then
-                  echo "Blue 컨테이너가 정상적으로 실행됨."
+                if docker ps --format '{{.Names}}' | grep -q "dangdang_check_app_blue"; then
+                  echo "✅ Blue 컨테이너가 정상적으로 실행됨."
                   break
                 fi
-                echo "컨테이너 실행 대기 중..."
+                echo "⏳ 컨테이너 실행 대기 중..."
               done
 
-              echo "Nginx 설정을 Blue로 변경"
-              sudo sed -i 's/127.0.0.1:8081 weight=0;/127.0.0.1:8081 weight=1;/g' /etc/nginx/conf.d/dangdang-check.conf
-              sudo sed -i 's/127.0.0.1:8082 weight=1;/127.0.0.1:8082 weight=0;/g' /etc/nginx/conf.d/dangdang-check.conf
+              echo "🔄 Nginx 설정을 Blue로 변경"
+              sudo sed -i 's/127.0.0.1:8081 down;/127.0.0.1:8081 weight=1;/g' /etc/nginx/conf.d/dangdang-check.conf
+              sudo sed -i 's/127.0.0.1:8082 weight=1;/127.0.0.1:8082 down;/g' /etc/nginx/conf.d/dangdang-check.conf
               sudo systemctl reload nginx
               exit 0
             fi
 
             if [ "$ACTIVE_VERSION" == "dangdang_check_app_blue" ]; then
-              echo "Blue가 현재 활성화됨. Green으로 전환 중..."
+              echo "🟢 Blue가 현재 활성화됨. Green으로 전환 중..."
               docker-compose up --build -d app_green
 
               echo "새로운 Green 컨테이너 상태 확인 중..."
               for i in {1..10}; do
                 sleep 3
-                if docker ps | grep -q "dangdang_check_app_green"; then
-                  echo "Green 컨테이너가 정상적으로 실행됨."
+                if docker ps --format '{{.Names}}' | grep -q "dangdang_check_app_green"; then
+                  echo "✅ Green 컨테이너가 정상적으로 실행됨."
                   break
                 fi
-                echo "컨테이너 실행 대기 중..."
+                echo "⏳ 컨테이너 실행 대기 중..."
               done
 
-              echo "트래픽을 Green으로 전환"
-              sudo sed -i 's/127.0.0.1:8081 weight=1;/127.0.0.1:8081 weight=0;/g' /etc/nginx/conf.d/dangdang-check.conf
-              sudo sed -i 's/127.0.0.1:8082 weight=0;/127.0.0.1:8082 weight=1;/g' /etc/nginx/conf.d/dangdang-check.conf
+              echo "🔄 트래픽을 Green으로 전환"
+              sudo sed -i 's/127.0.0.1:8081 weight=1;/127.0.0.1:8081 down;/g' /etc/nginx/conf.d/dangdang-check.conf'
+              sudo sed -i 's/127.0.0.1:8082 down;/127.0.0.1:8082 weight=1;/g' /etc/nginx/conf.d/dangdang-check.conf'
               sudo systemctl reload nginx
 
-              echo "기존 Blue 컨테이너 종료 대기 (30초)"
+              echo "🛑 기존 Blue 컨테이너 종료 대기 (30초)"
               sleep 30
               if docker ps -a --format '{{.Names}}' | grep -q 'dangdang_check_app_blue'; then
                 docker stop dangdang_check_app_blue && docker rm dangdang_check_app_blue
               else
-                echo "dangdang_check_app_blue 컨테이너가 존재하지 않음. 건너뜀."
+                echo "⚠️ dangdang_check_app_blue 컨테이너가 존재하지 않음. 건너뜀."
               fi
             else
-              echo "Green이 현재 활성화됨. Blue로 전환 중..."
+              echo "🟢 Green이 현재 활성화됨. Blue로 전환 중..."
               docker-compose up --build -d app_blue
 
               echo "새로운 Blue 컨테이너 상태 확인 중..."
               for i in {1..10}; do
                 sleep 3
-                if docker ps | grep -q "dangdang_check_app_blue"; then
-                  echo "Blue 컨테이너가 정상적으로 실행됨."
+                if docker ps --format '{{.Names}}' | grep -q "dangdang_check_app_blue"; then
+                  echo "✅ Blue 컨테이너가 정상적으로 실행됨."
                   break
                 fi
-                echo "컨테이너 실행 대기 중..."
+                echo "⏳ 컨테이너 실행 대기 중..."
               done
 
-              echo "트래픽을 Blue로 전환"
-              sudo sed -i 's/127.0.0.1:8081 weight=0;/127.0.0.1:8081 weight=1;/g' /etc/nginx/conf.d/dangdang-check.conf
-              sudo sed -i 's/127.0.0.1:8082 weight=1;/127.0.0.1:8082 weight=0;/g' /etc/nginx/conf.d/dangdang-check.conf
+              echo "🔄 트래픽을 Blue로 전환"
+              sudo sed -i 's/127.0.0.1:8081 down;/127.0.0.1:8081 weight=1;/g' /etc/nginx/conf.d/dangdang-check.conf'
+              sudo sed -i 's/127.0.0.1:8082 weight=1;/127.0.0.1:8082 down;/g' /etc/nginx/conf.d/dangdang-check.conf'
               sudo systemctl reload nginx
 
-              echo "기존 Green 컨테이너 종료 대기 (30초)"
+              echo "🛑 기존 Green 컨테이너 종료 대기 (30초)"
               sleep 30
               if docker ps -a --format '{{.Names}}' | grep -q 'dangdang_check_app_green'; then
                 docker stop dangdang_check_app_green && docker rm dangdang_check_app_green
               else
-                echo "dangdang_check_app_green 컨테이너가 존재하지 않음. 건너뜀."
+                echo "⚠️ dangdang_check_app_green 컨테이너가 존재하지 않음. 건너뜀."
               fi
             fi
           EOF
