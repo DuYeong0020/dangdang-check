@@ -1,1 +1,2 @@
 # dangdang-check
+.
