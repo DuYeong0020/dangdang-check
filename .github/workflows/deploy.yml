@@ -44,9 +44,14 @@ jobs:
               done
 
               echo "🔄 Nginx 설정을 Blue로 변경"
-              sudo sed -i 's/127.0.0.1:8081 down;/127.0.0.1:8081 weight=1;/g' /etc/nginx/conf.d/dangdang-check.conf
-              sudo sed -i 's/127.0.0.1:8082 weight=1;/127.0.0.1:8082 down;/g' /etc/nginx/conf.d/dangdang-check.conf
-              sudo systemctl reload nginx
+              if [ -f /etc/nginx/conf.d/dangdang-check.conf ]; then
+                sudo sed -i 's/127.0.0.1:8081 down;/127.0.0.1:8081 weight=1;/g' /etc/nginx/conf.d/dangdang-check.conf
+                sudo sed -i 's/127.0.0.1:8082 weight=1;/127.0.0.1:8082 down;/g' /etc/nginx/conf.d/dangdang-check.conf
+                sudo systemctl reload nginx
+              else
+                echo "❌ Nginx 설정 파일이 없습니다! 배포를 중단합니다."
+                exit 1
+              fi
               exit 0
             fi
 
@@ -65,9 +70,14 @@ jobs:
               done
 
               echo "🔄 트래픽을 Green으로 전환"
-              sudo sed -i 's/127.0.0.1:8081 weight=1;/127.0.0.1:8081 down;/g' /etc/nginx/conf.d/dangdang-check.conf'
-              sudo sed -i 's/127.0.0.1:8082 down;/127.0.0.1:8082 weight=1;/g' /etc/nginx/conf.d/dangdang-check.conf'
-              sudo systemctl reload nginx
+              if [ -f /etc/nginx/conf.d/dangdang-check.conf ]; then
+                sudo sed -i 's/127.0.0.1:8081 weight=1;/127.0.0.1:8081 down;/g' /etc/nginx/conf.d/dangdang-check.conf
+                sudo sed -i 's/127.0.0.1:8082 down;/127.0.0.1:8082 weight=1;/g' /etc/nginx/conf.d/dangdang-check.conf
+                sudo systemctl reload nginx
+              else
+                echo "❌ Nginx 설정 파일이 없습니다! 배포를 중단합니다."
+                exit 1
+              fi
 
               echo "🛑 기존 Blue 컨테이너 종료 대기 (30초)"
               sleep 30
@@ -91,9 +101,14 @@ jobs:
               done
 
               echo "🔄 트래픽을 Blue로 전환"
-              sudo sed -i 's/127.0.0.1:8081 down;/127.0.0.1:8081 weight=1;/g' /etc/nginx/conf.d/dangdang-check.conf'
-              sudo sed -i 's/127.0.0.1:8082 weight=1;/127.0.0.1:8082 down;/g' /etc/nginx/conf.d/dangdang-check.conf'
-              sudo systemctl reload nginx
+              if [ -f /etc/nginx/conf.d/dangdang-check.conf ]; then
+                sudo sed -i 's/127.0.0.1:8081 down;/127.0.0.1:8081 weight=1;/g' /etc/nginx/conf.d/dangdang-check.conf
+                sudo sed -i 's/127.0.0.1:8082 weight=1;/127.0.0.1:8082 down;/g' /etc/nginx/conf.d/dangdang-check.conf
+                sudo systemctl reload nginx
+              else
+                echo "❌ Nginx 설정 파일이 없습니다! 배포를 중단합니다."
+                exit 1
+              fi
 
               echo "🛑 기존 Green 컨테이너 종료 대기 (30초)"
               sleep 30
