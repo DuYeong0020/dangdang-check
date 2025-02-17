@@ -31,7 +31,7 @@ jobs:
 
             if [ -z "$ACTIVE_VERSION" ]; then
               echo "현재 실행 중인 컨테이너가 없음! Blue 컨테이너를 기본으로 실행합니다."
-              docker-compose up --build -d app_blue
+              docker-compose --env-file .env.prod up --build -d app_blue
 
               echo "새로운 Blue 컨테이너 상태 확인 중..."
               for i in {1..10}; do
@@ -57,7 +57,7 @@ jobs:
 
             if [ "$ACTIVE_VERSION" == "dangdang_check_app_blue" ]; then
               echo "🟢 Blue가 현재 활성화됨. Green으로 전환 중..."
-              docker-compose up --build -d app_green
+              docker-compose --env-file .env.prod up --build -d app_green
 
               echo "새로운 Green 컨테이너 상태 확인 중..."
               for i in {1..10}; do
@@ -88,7 +88,7 @@ jobs:
               fi
             else
               echo "🟢 Green이 현재 활성화됨. Blue로 전환 중..."
-              docker-compose up --build -d app_blue
+              docker-compose --env-file .env.prod up --build -d app_blue
 
               echo "새로운 Blue 컨테이너 상태 확인 중..."
               for i in {1..10}; do
