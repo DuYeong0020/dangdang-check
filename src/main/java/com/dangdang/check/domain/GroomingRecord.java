@@ -18,6 +18,7 @@ public class GroomingRecord extends BaseEntity {
     @Lob
     private String groomingDetails; // 미용 스타일 및 특이사항
     private LocalDateTime groomedAt; // 미용한 날짜
+    private Double weight; // 미용 당시 체중 (kg)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id", nullable = false)
