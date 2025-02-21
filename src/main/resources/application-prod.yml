@@ -19,3 +19,10 @@ spring:
       name: /app/logs/app.log
     level:
       root: info
+
+springdoc:
+  api-docs:
+    enabled: true  # Swagger 활성화
+  swagger-ui:
+    enabled: true
+    path: /swagger  # Swagger UI 접근 경로 지정
