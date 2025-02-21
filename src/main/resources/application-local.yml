@@ -19,3 +19,10 @@ spring:
       name: logs/local-app.log  # 로컬 로그 경로
     level:
       root: debug  # 로컬에서는 디버깅을 위해 debug 레벨 사용
+
+springdoc:
+  api-docs:
+    enabled: true  # Swagger 활성화
+  swagger-ui:
+    enabled: true
+    path: /swagger  # Swagger UI 접근 경로 지정
