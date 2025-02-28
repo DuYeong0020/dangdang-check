@@ -1,6 +1,8 @@
 package com.dangdang.check.filter;
 
 
+import com.dangdang.check.dto.CustomEmployeeDetails;
+import com.dangdang.check.util.JwtUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -22,7 +24,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final ObjectMapper objectMapper;
-
+    private final JwtUtil jwtUtil;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -38,12 +40,20 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+        CustomEmployeeDetails employeeDetails = (CustomEmployeeDetails) authentication.getPrincipal();
+        String loginId = employeeDetails.getUsername();
+        String role = authentication.getAuthorities()
+                .iterator()
+                .next()
+                .getAuthority();
 
+        String token = jwtUtil.createJwt(loginId, role, 1000 * 60 * 60L);
+        response.addHeader("Authorization", "Bearer " + token);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-
+        response.setStatus(401);
     }
 
     private Map.Entry<String, String> extractCredentials(HttpServletRequest request) {
