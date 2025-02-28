@@ -30,6 +30,11 @@ public class Employee extends BaseEntity {
     @JoinColumn(name = "store_id")
     private Store store;
 
+    public Employee(String loginId, Role role) {
+        this.loginId = loginId;
+        this.role = role;
+    }
+
     public void modifyPassword(String password) {
        if (StringUtils.hasText(password)) {
            this.password = password;
