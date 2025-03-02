@@ -1,7 +1,9 @@
 package com.dangdang.check.config;
 
+import com.dangdang.check.filter.CustomLogoutFilter;
 import com.dangdang.check.filter.JwtFilter;
 import com.dangdang.check.filter.LoginFilter;
+import com.dangdang.check.repository.RefreshTokenRepository;
 import com.dangdang.check.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 
 @Configuration
@@ -24,6 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final RefreshTokenRepository refreshTokenRepository;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
@@ -48,13 +52,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/",
                                 "/v1/register",
-                                "/login")
+                                "/login", "/reissue")
                         .permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), objectMapper, jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(new LoginFilter(refreshTokenRepository, authenticationManager(authenticationConfiguration), objectMapper, jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class)
                 .build();
     }
 

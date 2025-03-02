@@ -37,6 +37,15 @@ public class JwtUtil {
                 .get("role", String.class);
     }
 
+    public String getCategory(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("category", String.class);
+    }
+
     public Boolean isExpired(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)
@@ -47,8 +56,9 @@ public class JwtUtil {
                 .before(new Date());
     }
 
-    public String createJwt(String loginId, String role, Long expiredMs) {
+    public String createJwt(String category, String loginId, String role, Long expiredMs) {
         return Jwts.builder()
+                .claim("category", category)
                 .claim("loginId", loginId)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
