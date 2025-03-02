@@ -1,12 +1,15 @@
 package com.dangdang.check.filter;
 
 
+import com.dangdang.check.domain.RefreshToken;
 import com.dangdang.check.dto.CustomEmployeeDetails;
+import com.dangdang.check.repository.RefreshTokenRepository;
 import com.dangdang.check.util.JwtUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +20,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
+    private final RefreshTokenRepository refreshTokenRepository;
     private final AuthenticationManager authenticationManager;
     private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
@@ -31,7 +36,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Map.Entry<String, String> credentials = extractCredentials(request);
 
         if (credentials == null) {
-            throw new AuthenticationException("Invalid login request") {};
+            throw new AuthenticationException("Invalid login request") {
+            };
         }
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(credentials.getKey(), credentials.getValue(), null);
@@ -40,15 +46,24 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        CustomEmployeeDetails employeeDetails = (CustomEmployeeDetails) authentication.getPrincipal();
-        String loginId = employeeDetails.getUsername();
+        // 유저 정보
+        String loginId = authentication.getName();
         String role = authentication.getAuthorities()
                 .iterator()
                 .next()
                 .getAuthority();
 
-        String token = jwtUtil.createJwt(loginId, role, 1000 * 60 * 60L);
-        response.addHeader("Authorization", "Bearer " + token);
+        // 토큰 생성
+        String accessToken = jwtUtil.createJwt("access", loginId, role, 600000L);
+        String refreshToken = jwtUtil.createJwt("refresh", loginId, role, 86400000L);
+
+        // Refresh 토큰 저장
+        storeRefreshToken(loginId, refreshToken, 86400000L);
+
+        // 응답 설정
+        response.setHeader("access", accessToken);
+        response.addCookie(createCookie("refresh", refreshToken));
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override
@@ -68,7 +83,22 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
             return Map.entry(loginId, password);
         } catch (IOException e) {
-            throw new AuthenticationException("Failed to parse JSON request") {};
+            throw new AuthenticationException("Failed to parse JSON request") {
+            };
         }
+    }
+
+    private void storeRefreshToken(String loginId, String refreshToken, Long expiredMs) {
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+
+        RefreshToken initRefreshToken = new RefreshToken(loginId, refreshToken, date.toString());
+        refreshTokenRepository.save(initRefreshToken);
+    }
+
+    private Cookie createCookie(String key, String value) {
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(24 * 60 * 60);
+        cookie.setHttpOnly(true);
+        return cookie;
     }
 }
