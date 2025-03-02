@@ -4,6 +4,7 @@ import com.dangdang.check.domain.Employee;
 import com.dangdang.check.domain.Role;
 import com.dangdang.check.dto.CustomEmployeeDetails;
 import com.dangdang.check.util.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,25 +29,46 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authorization = request.getHeader("Authorization");
-        if (authorization == null || !authorization.startsWith("Bearer ")) {
+        // 헤더에서 access키에 담긴 토큰을 꺼냄
+        String accessToken = request.getHeader("access");
+        // 토큰이 없다면 다음 필터로 넘김
+        if (accessToken == null) {
             filterChain.doFilter(request, response);
             return;
         }
-        String token = authorization.substring(7);
+        // 토큰 만료 여부 확인, 만료시 다음 필터로 넘기지 않음
+        try {
+            jwtUtil.isExpired(accessToken);
+        } catch (ExpiredJwtException e) {
+            // response body
+            response.getWriter().write("access token expired");
 
-        if (jwtUtil.isExpired(token)) {
-            filterChain.doFilter(request, response);
+            // response status code
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+
+        }
+
+        // 토큰이 access인지 확인(발급시 페이로드에 명시)
+        String category = jwtUtil.getCategory(accessToken);
+
+        if (!category.equals("access")) {
+            // response body
+            response.getWriter().write("invalid access token");
+
+            // response status code
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        String loginId = jwtUtil.getLoginId(token);
-        Role role = Role.valueOf(jwtUtil.getRole(token));
+        // loginId, role 값을 획득
+        String loginId = jwtUtil.getLoginId(accessToken);
+        String role = jwtUtil.getRole(accessToken);
 
-        Employee employee = new Employee(loginId, role);
-        CustomEmployeeDetails employeeDetails = new CustomEmployeeDetails(employee);
+        Employee employee = new Employee(loginId, Role.valueOf(role));
+        CustomEmployeeDetails customEmployeeDetails = new CustomEmployeeDetails(employee);
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(employeeDetails, null, employeeDetails.getAuthorities());
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(customEmployeeDetails, null, customEmployeeDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
