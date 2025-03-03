@@ -1,5 +1,6 @@
 package com.dangdang.check.domain.security.controller;
 
+import com.dangdang.check.common.response.CommonResponse;
 import com.dangdang.check.domain.security.entity.RefreshToken;
 import com.dangdang.check.domain.security.repository.RefreshTokenRepository;
 import com.dangdang.check.common.util.JwtUtil;
@@ -8,8 +9,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +23,7 @@ public class ReissueController {
 
 
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+    public CommonResponse<Boolean> reissue(HttpServletRequest request, HttpServletResponse response) {
         // get refresh token
         String refreshToken = null;
         Cookie[] cookies = request.getCookies();
@@ -35,29 +34,25 @@ public class ReissueController {
         }
 
         if (refreshToken == null) {
-            // response status code
-            return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
+            throw new RuntimeException("refresh token is null");
         }
         // expired check
         try {
             jwtUtil.isExpired(refreshToken);
         } catch (ExpiredJwtException e) {
-            // response status code
-            return new ResponseEntity<>("refresh token expired", HttpStatus.BAD_REQUEST);
+            throw new RuntimeException("refresh token expired");
         }
 
         // 토큰이 refresh인지 확인(발급시 페이로드에 명시)
         String category = jwtUtil.getCategory(refreshToken);
 
         if (!category.equals("refresh")) {
-            // response status code
-            return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
+            throw new RuntimeException("invalid refresh token");
         }
         // DB에 저장되어 있는지 확인
         Boolean isExist = refreshTokenRepository.existsByRefreshToken(refreshToken);
         if (!isExist) {
-            // response body
-            return new ResponseEntity<>("invalid refresh token", HttpStatus.BAD_REQUEST);
+            throw new RuntimeException("invalid refresh token");
         }
 
         String loginId = jwtUtil.getLoginId(refreshToken);
@@ -76,7 +71,7 @@ public class ReissueController {
         response.setHeader("access", newAccessToken);
         response.addCookie(createCookie("refresh", newRefreshToken));
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return CommonResponse.success(true);
 
     }
 
