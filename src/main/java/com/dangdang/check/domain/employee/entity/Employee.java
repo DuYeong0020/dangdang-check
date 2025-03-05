@@ -27,7 +27,7 @@ public class Employee extends BaseEntity {
     @Column(nullable = false)
     private String mobilePhone; // 휴대전화
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.DEFAULT;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
