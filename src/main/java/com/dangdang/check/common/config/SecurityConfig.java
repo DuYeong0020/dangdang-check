@@ -1,10 +1,10 @@
 package com.dangdang.check.common.config;
 
-import com.dangdang.check.security.filter.CustomLogoutFilter;
-import com.dangdang.check.security.filter.JwtFilter;
-import com.dangdang.check.security.filter.LoginFilter;
-import com.dangdang.check.domain.security.repository.RefreshTokenRepository;
+import com.dangdang.check.common.filter.CustomLogoutFilter;
+import com.dangdang.check.common.filter.JwtFilter;
+import com.dangdang.check.common.filter.LoginFilter;
 import com.dangdang.check.common.util.JwtUtil;
+import com.dangdang.check.infrastrucure.security.RefreshTokenJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +27,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenJpaRepository refreshTokenRepository;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
