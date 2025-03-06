@@ -20,28 +20,28 @@ public class EmployeeValidatorImpl implements EmployeeValidator {
     }
 
     private void checkDuplicateMobilePhone(String mobilePhone) {
-        employeeJpaRepository.findByMobilePhone(mobilePhone)
+        employeeJpaRepository.findByMobilePhoneAndIsDeletedFalse(mobilePhone)
                 .ifPresent(employee -> {
                     throw new RuntimeException("Duplicate mobile phone number");
                 });
     }
 
     private void checkDuplicateEmail(String email) {
-        employeeJpaRepository.findByEmail(email)
+        employeeJpaRepository.findByEmailAndIsDeletedFalse(email)
                 .ifPresent(employee -> {
                     throw new RuntimeException("Duplicate email");
                 });
     }
 
     private void checkDuplicateLoginId(String loginId) {
-        employeeJpaRepository.findByLoginId(loginId)
+        employeeJpaRepository.findByLoginIdAndIsDeletedFalse(loginId)
                 .ifPresent(employee -> {
                     throw new RuntimeException("Duplicate loginId");
                 });
     }
 
     private void checkDuplicateNickname(String nickname) {
-        employeeJpaRepository.findByNickname(nickname)
+        employeeJpaRepository.findByNicknameAndIsDeletedFalse(nickname)
                 .ifPresent(employee -> {
                     throw new RuntimeException("Duplicate nickname");
                 });

@@ -1,12 +1,12 @@
 package com.dangdang.check.domain.employee;
 
-import com.dangdang.check.infrastrucure.employee.EmployeeJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +17,7 @@ public class CustomEmployeeDetailsService implements UserDetailsService, Employe
     private final EmployeeValidator employeeValidator;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public EmployeeInfo registerEmployee(EmployeeCommand.RegisterEmployeeRequest request) {
         employeeValidator.checkRegisterEmployee(request);
         String encodedPassword = passwordEncoder.encode(request.getPassword());
