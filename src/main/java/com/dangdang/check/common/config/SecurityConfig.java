@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/",
-                                "/v1/register",
+                                "/api/employees",
                                 "/login", "/reissue")
                         .permitAll()
                         .anyRequest().authenticated())

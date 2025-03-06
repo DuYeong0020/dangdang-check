@@ -14,7 +14,7 @@ public class EmployeeJpaReader implements EmployeeReader {
 
     @Override
     public Employee findByLoginId(String loginId) {
-        return employeeJpaRepository.findByLoginId(loginId)
+        return employeeJpaRepository.findByLoginIdAndIsDeletedFalse(loginId)
                 .orElseThrow(EntityNotFoundException::new);
     }
 }

@@ -16,8 +16,8 @@ public class EmployeeApiController {
 
     private final CustomEmployeeDetailsService customEmployeeDetailsService;
 
-    @PostMapping("/v1/register")
-    public CommonResponse<EmployeeDto.RegisterEmployeeResponse> register(@RequestBody @Valid EmployeeDto.RegisterEmployeeRequest request) {
+    @PostMapping("/api/employees")
+    public CommonResponse<EmployeeDto.RegisterEmployeeResponse> registerEmployee(@RequestBody @Valid EmployeeDto.RegisterEmployeeRequest request) {
         EmployeeCommand.RegisterEmployeeRequest command = request.toCommand();
         EmployeeInfo employeeInfo = customEmployeeDetailsService.registerEmployee(command);
         EmployeeDto.RegisterEmployeeResponse response = new EmployeeDto.RegisterEmployeeResponse(employeeInfo);
