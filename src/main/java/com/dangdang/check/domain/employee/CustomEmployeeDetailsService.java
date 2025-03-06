@@ -10,22 +10,24 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CustomEmployeeDetailsService implements UserDetailsService {
+public class CustomEmployeeDetailsService implements UserDetailsService, EmployeeService {
 
-    private final EmployeeJpaRepository employeeRepository;
+    private final EmployeeReader employeeReader;
+    private final EmployeeStore employeeStore;
+    private final EmployeeValidator employeeValidator;
     private final PasswordEncoder passwordEncoder;
 
     public EmployeeInfo registerEmployee(EmployeeCommand.RegisterEmployeeRequest request) {
+        employeeValidator.checkRegisterEmployee(request);
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         Employee initEmployee = request.toEntity(encodedPassword);
-        Employee employee = employeeRepository.save(initEmployee);
+        Employee employee = employeeStore.storeEmployee(initEmployee);
         return new EmployeeInfo(employee);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Employee employee = employeeRepository.findByLoginId(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        Employee employee = employeeReader.findByLoginId(username);
         return new CustomEmployeeDetails(employee);
     }
 }
