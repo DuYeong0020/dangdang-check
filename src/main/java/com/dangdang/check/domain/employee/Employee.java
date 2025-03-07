@@ -52,4 +52,10 @@ public class Employee extends BaseEntity {
            this.password = password;
        }
     }
+
+    public void modifyStore(Store store) {
+        if (store != null) {
+            this.store = store;
+        }
+    }
 }
