@@ -3,6 +3,7 @@ package com.dangdang.check.domain.store;
 import com.dangdang.check.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,7 +25,13 @@ public class BusinessInfo extends BaseEntity {
     @Column(nullable = false)
     private RegistrationStatus registrationStatus; // 승인 상태
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id", nullable = false)
-    private Store store;
+    @Builder
+    public BusinessInfo(String businessRegistrationNumber, String businessName, String representativeName, String businessType, Address businessAddress, RegistrationStatus registrationStatus) {
+        this.businessRegistrationNumber = businessRegistrationNumber;
+        this.businessName = businessName;
+        this.representativeName = representativeName;
+        this.businessType = businessType;
+        this.businessAddress = businessAddress;
+        this.registrationStatus = registrationStatus;
+    }
 }
