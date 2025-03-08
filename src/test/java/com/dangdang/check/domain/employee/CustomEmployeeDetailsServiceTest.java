@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +19,9 @@ class CustomEmployeeDetailsServiceTest {
 
     @Mock
     private EmployeeStore employeeStore;
+
+    @Mock
+    private EmployeeReader employeeReader;
 
     @Mock
     private EmployeeValidator employeeValidator;
@@ -50,5 +54,25 @@ class CustomEmployeeDetailsServiceTest {
         assertNotNull(encodedPassword);
         assertEquals("test", employeeInfo.getLoginId());
         assertEquals("test", employeeInfo.getNickname());
+        assertEquals(Role.DEFAULT, employeeInfo.getRole());
+    }
+
+    @Test
+    @DisplayName("직원 정보 조회 성공")
+    void loadUserByUsername_직원정보조회_성공() {
+        // given
+        String loginId = "test";
+        Employee initEmployee = new Employee("test", "test", "test!!", "test@gmail.com", "01012345678");
+        given(employeeReader.findByLoginId(loginId)).willReturn(initEmployee);
+
+        // when
+        UserDetails userDetails = customEmployeeDetailsService.loadUserByUsername(loginId);
+
+        // then
+        assertNotNull(userDetails);
+        assertEquals(loginId, userDetails.getUsername());
+        assertEquals("test!!", userDetails.getPassword());
+        assertInstanceOf(CustomEmployeeDetails.class, userDetails);
+        verify(employeeReader).findByLoginId(loginId);
     }
 }

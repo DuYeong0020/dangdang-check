@@ -27,8 +27,8 @@ public class CustomEmployeeDetailsService implements UserDetailsService, Employe
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Employee employee = employeeReader.findByLoginId(username);
+    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+        Employee employee = employeeReader.findByLoginId(loginId);
         return new CustomEmployeeDetails(employee);
     }
 }
