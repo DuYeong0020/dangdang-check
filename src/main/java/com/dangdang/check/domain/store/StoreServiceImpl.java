@@ -2,6 +2,7 @@ package com.dangdang.check.domain.store;
 
 import com.dangdang.check.domain.employee.Employee;
 import com.dangdang.check.domain.employee.EmployeeReader;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ public class StoreServiceImpl implements StoreService {
 
     private final StoreValidator storeValidator;
     private final StoreStore storeStore;
+    private final StoreReader storeReader;
     private final EmployeeReader employeeReader;
 
     @Override
@@ -22,6 +24,18 @@ public class StoreServiceImpl implements StoreService {
         Store initStore = request.toEntity(RegistrationStatus.PENDING, employee);
         Store store = storeStore.storeStore(initStore);
         employee.modifyStore(store);
+        return new StoreInfo(store);
+    }
+
+    @Override
+    @Transactional
+    public StoreInfo approveStore(Long storeId) {
+        Store store = storeReader.findById(storeId);
+        BusinessInfo businessInfo = store.getBusinessInfo();
+        if (businessInfo == null) {
+            throw new EntityNotFoundException("BusinessInfo not found for storeId: " + storeId);
+        }
+        businessInfo.approve();
         return new StoreInfo(store);
     }
 }

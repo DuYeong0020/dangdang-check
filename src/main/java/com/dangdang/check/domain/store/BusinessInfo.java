@@ -34,4 +34,8 @@ public class BusinessInfo extends BaseEntity {
         this.businessAddress = businessAddress;
         this.registrationStatus = registrationStatus;
     }
+
+    public void approve() {
+        this.registrationStatus = RegistrationStatus.APPROVED;
+    }
 }
