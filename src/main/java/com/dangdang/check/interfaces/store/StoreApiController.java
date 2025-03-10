@@ -29,4 +29,11 @@ public class StoreApiController {
         StoreDto.ApproveStoreResponse response = new StoreDto.ApproveStoreResponse(storeInfo);
         return CommonResponse.success(response);
     }
+
+    @PatchMapping("/api/stores/{storeId}/reject")
+    public CommonResponse<StoreDto.RejectStoreResponse> rejectStore(@PathVariable Long storeId, @RequestBody StoreDto.RejectStoreRequest request) {
+        StoreInfo storeInfo = storeService.rejectStore(storeId, request.getReason());
+        StoreDto.RejectStoreResponse response = new StoreDto.RejectStoreResponse(storeInfo);
+        return CommonResponse.success(response);
+    }
 }

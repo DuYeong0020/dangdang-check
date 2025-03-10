@@ -38,4 +38,16 @@ public class StoreServiceImpl implements StoreService {
         businessInfo.approve();
         return new StoreInfo(store);
     }
+
+    @Override
+    @Transactional
+    public StoreInfo rejectStore(Long storeId, String reason) {
+        Store store = storeReader.findById(storeId);
+        BusinessInfo businessInfo = store.getBusinessInfo();
+        if (businessInfo == null) {
+            throw new EntityNotFoundException("BusinessInfo not found for storeId: " + storeId);
+        }
+        businessInfo.reject(reason);
+        return new StoreInfo(store);
+    }
 }
