@@ -18,6 +18,7 @@ public class StoreInfo {
     private final String businessType;
     private final AddressInfo businessAddress;
     private final String registrationStatus;
+    private final String rejectedReason;
 
     public StoreInfo(Store store) {
         this.ownerId = store.getOwner().getId();
@@ -31,6 +32,7 @@ public class StoreInfo {
         this.businessType = store.getBusinessInfo().getBusinessType();
         this.businessAddress = new AddressInfo(store.getBusinessInfo().getBusinessAddress());
         this.registrationStatus = store.getBusinessInfo().getRegistrationStatus().name();
+        this.rejectedReason = store.getBusinessInfo().getRejectedReason();
     }
 
     @Getter
