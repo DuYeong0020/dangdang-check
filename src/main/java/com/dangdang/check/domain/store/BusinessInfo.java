@@ -24,6 +24,7 @@ public class BusinessInfo extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RegistrationStatus registrationStatus; // 승인 상태
+    private String rejectedReason; // 거절 이유
 
     @Builder
     public BusinessInfo(String businessRegistrationNumber, String businessName, String representativeName, String businessType, Address businessAddress, RegistrationStatus registrationStatus) {
