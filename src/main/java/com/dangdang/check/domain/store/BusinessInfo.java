@@ -39,4 +39,9 @@ public class BusinessInfo extends BaseEntity {
     public void approve() {
         this.registrationStatus = RegistrationStatus.APPROVED;
     }
+
+    public void reject(String reason) {
+        this.registrationStatus = RegistrationStatus.REJECTED;
+        this.rejectedReason = reason;
+    }
 }
