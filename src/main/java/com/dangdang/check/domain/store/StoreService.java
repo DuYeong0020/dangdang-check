@@ -1,5 +1,8 @@
 package com.dangdang.check.domain.store;
 
+import com.dangdang.check.infrastrucure.store.StoreCriteria;
+import org.springframework.data.domain.Page;
+
 public interface StoreService {
 
     StoreInfo registerStore(StoreCommand.RegisterStoreRequest request);
@@ -7,4 +10,6 @@ public interface StoreService {
     StoreInfo approveStore(Long storeId);
 
     StoreInfo rejectStore(Long storeId, String reason);
+
+    Page<StoreSummaryInfo> getStoresByCriteria(StoreCriteria.GetStores criteria);
 }

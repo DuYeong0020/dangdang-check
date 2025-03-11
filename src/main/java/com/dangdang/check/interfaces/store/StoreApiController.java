@@ -5,8 +5,12 @@ import com.dangdang.check.common.response.CommonResponse;
 import com.dangdang.check.domain.store.StoreCommand;
 import com.dangdang.check.domain.store.StoreInfo;
 import com.dangdang.check.domain.store.StoreService;
+import com.dangdang.check.domain.store.StoreSummaryInfo;
+import com.dangdang.check.infrastrucure.store.StoreCriteria;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,6 +24,14 @@ public class StoreApiController {
         StoreCommand.RegisterStoreRequest command = request.toCommand(loginId);
         StoreInfo storeInfo = storeService.registerStore(command);
         StoreDto.RegisterStoreResponse response = new StoreDto.RegisterStoreResponse(storeInfo);
+        return CommonResponse.success(response);
+    }
+
+    @GetMapping("/api/stores")
+    public CommonResponse<Page<StoreDto.GetStoresResponse>> getStoresByCriteria(@Valid @RequestBody StoreDto.GetStoresRequest request, Pageable pageable) {
+        StoreCriteria.GetStores criteria = request.toCriteria(pageable);
+        Page<StoreSummaryInfo> storeSummaryPage = storeService.getStoresByCriteria(criteria);
+        Page<StoreDto.GetStoresResponse> response = storeSummaryPage.map(StoreDto.GetStoresResponse::new);
         return CommonResponse.success(response);
     }
 

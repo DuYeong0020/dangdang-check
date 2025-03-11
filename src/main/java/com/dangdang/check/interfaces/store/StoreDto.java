@@ -1,7 +1,10 @@
 package com.dangdang.check.interfaces.store;
 
+import com.dangdang.check.domain.store.RegistrationStatus;
 import com.dangdang.check.domain.store.StoreCommand;
 import com.dangdang.check.domain.store.StoreInfo;
+import com.dangdang.check.domain.store.StoreSummaryInfo;
+import com.dangdang.check.infrastrucure.store.StoreCriteria;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.data.domain.Pageable;
 
 public class StoreDto {
 
@@ -123,6 +127,40 @@ public class StoreDto {
             this.businessAddress = new AddressResponse(storeInfo.getBusinessAddress());
             this.registrationStatus = storeInfo.getRegistrationStatus();
         }
+    }
+
+    @Getter
+    @ToString
+    public static class GetStoresRequest {
+
+        private String registrationStatus;
+
+        public StoreCriteria.GetStores toCriteria(Pageable pageable) {
+            return StoreCriteria.GetStores.builder()
+                    .pageable(pageable)
+                    .registrationStatus(registrationStatus != null ? RegistrationStatus.valueOf(registrationStatus) : null)
+                    .build();
+        }
+    }
+
+    @Getter
+    @ToString
+    public static class GetStoresResponse {
+
+        private final Long storeId;
+        private final String storeName;
+        private final String ownerName;
+        private final RegistrationStatus registrationStatus;
+        private final String mainPhone;
+
+        public GetStoresResponse(StoreSummaryInfo storeSummaryInfo) {
+            this.storeId = storeSummaryInfo.getStoreId();
+            this.storeName = storeSummaryInfo.getStoreName();
+            this.ownerName = storeSummaryInfo.getOwnerName();
+            this.registrationStatus = storeSummaryInfo.getRegistrationStatus();
+            this.mainPhone = storeSummaryInfo.getMainPhone();
+        }
+
     }
 
     @Getter
