@@ -2,8 +2,10 @@ package com.dangdang.check.domain.store;
 
 import com.dangdang.check.domain.employee.Employee;
 import com.dangdang.check.domain.employee.EmployeeReader;
+import com.dangdang.check.infrastrucure.store.StoreCriteria;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,11 @@ public class StoreServiceImpl implements StoreService {
         Store store = storeStore.storeStore(initStore);
         employee.modifyStore(store);
         return new StoreInfo(store);
+    }
+
+    @Override
+    public Page<StoreSummaryInfo> getStoresByCriteria(StoreCriteria.GetStores criteria) {
+        return storeReader.findByCriteria(criteria);
     }
 
     @Override
