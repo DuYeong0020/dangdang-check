@@ -29,6 +29,11 @@ public class StoreServiceImpl implements StoreService {
         return new StoreInfo(store);
     }
 
+    public StoreInfo getStoreById(Long storeId) {
+        Store store = storeReader.findById(storeId);
+        return new StoreInfo(store);
+    }
+
     @Override
     public Page<StoreSummaryInfo> getStoresByCriteria(StoreCriteria.GetStores criteria) {
         return storeReader.findByCriteria(criteria);

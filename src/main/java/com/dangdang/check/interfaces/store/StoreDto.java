@@ -131,6 +131,40 @@ public class StoreDto {
 
     @Getter
     @ToString
+    public static class GetStoreResponse {
+
+        private final Long ownerId;
+        private final String storeName;
+        private final AddressResponse storeAddress;
+        private final String storeEmail;
+        private final String mainPhone;
+
+        private final String businessRegistrationNumber;
+        private final String businessName;
+        private final String representativeName;
+        private final String businessType;
+        private final AddressResponse businessAddress;
+        private final String registrationStatus;
+        private final String rejectedReason;
+
+        public GetStoreResponse(StoreInfo storeInfo) {
+            this.ownerId = storeInfo.getOwnerId();
+            this.storeName = storeInfo.getStoreName();
+            this.storeAddress = new AddressResponse(storeInfo.getStoreAddress());
+            this.storeEmail = storeInfo.getStoreEmail();
+            this.mainPhone = storeInfo.getMainPhone();
+            this.businessRegistrationNumber = storeInfo.getBusinessRegistrationNumber();
+            this.businessName = storeInfo.getBusinessName();
+            this.representativeName = storeInfo.getRepresentativeName();
+            this.businessType = storeInfo.getBusinessType();
+            this.businessAddress = new AddressResponse(storeInfo.getBusinessAddress());
+            this.registrationStatus = storeInfo.getRegistrationStatus();
+            this.rejectedReason = storeInfo.getRejectedReason();
+        }
+    }
+
+    @Getter
+    @ToString
     public static class GetStoresRequest {
 
         private String registrationStatus;
@@ -255,4 +289,5 @@ public class StoreDto {
             this.detail = addressInfo.getDetail();
         }
     }
+
 }
