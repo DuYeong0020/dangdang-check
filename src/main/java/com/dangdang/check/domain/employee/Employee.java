@@ -53,6 +53,12 @@ public class Employee extends BaseEntity {
        }
     }
 
+    public void modifyRole(Role role) {
+        if (role != null) {
+            this.role = role;
+        }
+    }
+
     public void modifyStore(Store store) {
         if (store != null) {
             this.store = store;
