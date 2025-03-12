@@ -27,6 +27,13 @@ public class StoreApiController {
         return CommonResponse.success(response);
     }
 
+    @GetMapping("/api/stores/{storeId}")
+    public CommonResponse<StoreDto.GetStoreResponse> getStoreById(@PathVariable Long storeId) {
+        StoreInfo storeInfo = storeService.getStoreById(storeId);
+        StoreDto.GetStoreResponse response = new StoreDto.GetStoreResponse(storeInfo);
+        return CommonResponse.success(response);
+    }
+
     @GetMapping("/api/stores")
     public CommonResponse<Page<StoreDto.GetStoresResponse>> getStoresByCriteria(@Valid @RequestBody StoreDto.GetStoresRequest request, Pageable pageable) {
         StoreCriteria.GetStores criteria = request.toCriteria(pageable);
