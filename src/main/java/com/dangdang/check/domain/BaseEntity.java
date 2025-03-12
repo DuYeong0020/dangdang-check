@@ -26,4 +26,9 @@ public abstract class BaseEntity {
     private boolean isDeleted = false;
 
     private LocalDateTime deletedAt;
+
+    public void softDelete() {
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
+    }
 }

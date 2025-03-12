@@ -2,6 +2,7 @@ package com.dangdang.check.domain.store;
 
 import com.dangdang.check.domain.employee.Employee;
 import com.dangdang.check.domain.employee.EmployeeReader;
+import com.dangdang.check.domain.employee.EmployeeStore;
 import com.dangdang.check.infrastrucure.store.StoreCriteria;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class StoreServiceImpl implements StoreService {
     private final StoreValidator storeValidator;
     private final StoreStore storeStore;
     private final StoreReader storeReader;
+    private final EmployeeStore employeeStore;
     private final EmployeeReader employeeReader;
 
     @Override
@@ -61,5 +63,20 @@ public class StoreServiceImpl implements StoreService {
         }
         businessInfo.reject(reason);
         return new StoreInfo(store);
+    }
+
+    @Override
+    @Transactional
+    public void softDeleteStore(Long storeId) {
+        Store store = storeReader.findById(storeId);
+        BusinessInfo businessInfo = store.getBusinessInfo();
+
+        if (businessInfo == null) {
+            throw new EntityNotFoundException("BusinessInfo not found for storeId: " + storeId);
+        }
+        employeeStore.resetEmployeesOfStore(storeId);
+
+        store.softDelete();
+        businessInfo.softDelete();
     }
 }
