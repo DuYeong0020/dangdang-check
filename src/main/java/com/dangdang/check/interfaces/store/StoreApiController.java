@@ -35,7 +35,7 @@ public class StoreApiController {
     }
 
     @GetMapping("/api/stores")
-    public CommonResponse<Page<StoreDto.GetStoresResponse>> getStoresByCriteria(@Valid @RequestBody StoreDto.GetStoresRequest request, Pageable pageable) {
+    public CommonResponse<Page<StoreDto.GetStoresResponse>> getStoresByCriteria(@Valid StoreDto.GetStoresRequest request, Pageable pageable) {
         StoreCriteria.GetStores criteria = request.toCriteria(pageable);
         Page<StoreSummaryInfo> storeSummaryPage = storeService.getStoresByCriteria(criteria);
         Page<StoreDto.GetStoresResponse> response = storeSummaryPage.map(StoreDto.GetStoresResponse::new);

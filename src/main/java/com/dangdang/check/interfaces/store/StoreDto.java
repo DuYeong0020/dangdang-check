@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.domain.Pageable;
 
@@ -163,6 +164,7 @@ public class StoreDto {
         }
     }
 
+    @Setter
     @Getter
     @ToString
     public static class GetStoresRequest {
