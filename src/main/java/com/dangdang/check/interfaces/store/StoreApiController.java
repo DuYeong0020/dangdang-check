@@ -55,4 +55,10 @@ public class StoreApiController {
         StoreDto.RejectStoreResponse response = new StoreDto.RejectStoreResponse(storeInfo);
         return CommonResponse.success(response);
     }
+
+    @PatchMapping("/api/stores/{storeId}/soft-delete")
+    public CommonResponse<Boolean> softDeleteStore(@PathVariable Long storeId) {
+        storeService.softDeleteStore(storeId);
+        return CommonResponse.success(true);
+    }
 }

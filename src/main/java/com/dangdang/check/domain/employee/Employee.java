@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
 
 @Getter
 @Entity
@@ -45,12 +44,6 @@ public class Employee extends BaseEntity {
         this.password = password;
         this.email = email;
         this.mobilePhone = mobilePhone;
-    }
-
-    public void modifyPassword(String password) {
-       if (StringUtils.hasText(password)) {
-           this.password = password;
-       }
     }
 
     public void modifyStore(Store store) {

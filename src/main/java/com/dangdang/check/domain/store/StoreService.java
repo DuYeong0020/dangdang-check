@@ -14,4 +14,6 @@ public interface StoreService {
     StoreInfo getStoreById(Long storeId);
 
     Page<StoreSummaryInfo> getStoresByCriteria(StoreCriteria.GetStores criteria);
+
+    void softDeleteStore(Long storeId);
 }
