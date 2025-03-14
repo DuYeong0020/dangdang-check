@@ -1,0 +1,5 @@
+package com.dangdang.check.domain.customer;
+
+public interface CustomerValidator {
+    void checkRegisterCustomerWithPets(CustomerCommand.RegisterCustomerWithPetsRequest request);
+}

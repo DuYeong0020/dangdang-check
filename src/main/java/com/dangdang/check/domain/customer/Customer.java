@@ -1,11 +1,16 @@
 package com.dangdang.check.domain.customer;
 
 import com.dangdang.check.domain.BaseEntity;
+import com.dangdang.check.domain.pet.Pet;
 import com.dangdang.check.domain.store.Store;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -23,5 +28,28 @@ public class Customer extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Pet> pets = new ArrayList<>();
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
+    private List<CustomerPhone> phones = new ArrayList<>();
+
+    @Builder
+    public Customer(String name, String specialNotes, Store store) {
+        this.name = name;
+        this.specialNotes = specialNotes;
+        this.store = store;
+    }
+
+    public void addPhone(CustomerPhone phone) {
+        phones.add(phone);
+        phone.modifyCustomer(this);
+    }
+
+    public void addPet(Pet pet) {
+        pets.add(pet);
+        pet.modifyCustomer(this);
+    }
 
 }
