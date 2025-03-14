@@ -18,4 +18,9 @@ public class Breed extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Species species; // 종 (예: 개, 고양이)
 
+    public Breed(String name, Species species) {
+        this.name = name;
+        this.species = species;
+    }
+
 }
