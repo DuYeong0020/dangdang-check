@@ -27,7 +27,7 @@ public class Pet extends BaseEntity {
     private LocalDate birthday; // 생년월일
     private Double weight; // 체중
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "breed_id")
     private Breed breed;
 
