@@ -5,6 +5,7 @@ import com.dangdang.check.domain.pet.Pet;
 import com.dangdang.check.domain.store.Store;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,5 +34,22 @@ public class Customer extends BaseEntity {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
     private List<CustomerPhone> phones = new ArrayList<>();
+
+    @Builder
+    public Customer(String name, String specialNotes, Store store) {
+        this.name = name;
+        this.specialNotes = specialNotes;
+        this.store = store;
+    }
+
+    public void addPhone(CustomerPhone phone) {
+        phones.add(phone);
+        phone.modifyCustomer(this);
+    }
+
+    public void addPet(Pet pet) {
+        pets.add(pet);
+        pet.modifyCustomer(this);
+    }
 
 }
