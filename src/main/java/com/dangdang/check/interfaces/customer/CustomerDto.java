@@ -18,12 +18,18 @@ public class CustomerDto {
     @Getter
     @ToString
     public static class RegisterCustomerWithPetsRequest {
+
         private String customerName;
+
         private String phoneNumber;
+
         private String phoneLabel;
+
         @NotNull(message = "전화번호 유형은 필수입니다.")
         private PhoneType phoneType;
+
         private String specialNotes;
+
         @NotEmpty(message = "반려동물 정보는 최소 1개 이상이어야 합니다.")
         private List<@Valid PetRequest> petsRequest;
 
@@ -44,18 +50,26 @@ public class CustomerDto {
         @Getter
         @ToString
         public static class PetRequest {
+
             @NotBlank(message = "반려동물 이름은 필수입니다.")
             private String name;
+
             @Past(message = "생일은 현재 날짜보다 이전이어야 합니다.")
             private LocalDate birthday;
+
             private Boolean neutered;
+
             @NotNull(message = "백신 접종 여부는 필수입니다.")
             private Boolean vaccinated;
+
             private String specialNotes;
+
             @Positive(message = "몸무게는 0보다 커야 합니다.")
             private Double weight;
+
             @NotBlank(message = "견종 이름은 필수입니다.")
             private String breedName;
+
             @NotNull(message = "반려동물 종(Species)은 필수입니다.")
             private Species species;
 
