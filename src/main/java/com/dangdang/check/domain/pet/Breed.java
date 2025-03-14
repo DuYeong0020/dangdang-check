@@ -1,10 +1,7 @@
 package com.dangdang.check.domain.pet;
 
 import com.dangdang.check.domain.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +15,7 @@ public class Breed extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;  // 품종명 (예: 리트리버, 닥스훈트)
+    @Enumerated(EnumType.STRING)
     private Species species; // 종 (예: 개, 고양이)
 
 }
