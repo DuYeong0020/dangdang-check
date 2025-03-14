@@ -1,5 +1,6 @@
 package com.dangdang.check.common.response;
 
+import com.dangdang.check.common.exception.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,19 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestControllerAdvice
 public class CommonControllerAdvice {
+
+    /**
+     * Handles UnauthorizedException.
+     */
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(UnauthorizedException.class)
+    public CommonResponse<?> handleUnauthorizedException(UnauthorizedException ex) {
+        if (ex.getMessage() == null) {
+            return CommonResponse.fail(ErrorCode.COMMON_ACCESS_DENIED);
+        }
+        log.error("UnauthorizedException: {}", ex.getMessage());
+        return CommonResponse.fail(ex.getMessage(), ErrorCode.COMMON_ACCESS_DENIED.name());
+    }
 
     /**
      * Handles IllegalArgumentException.
