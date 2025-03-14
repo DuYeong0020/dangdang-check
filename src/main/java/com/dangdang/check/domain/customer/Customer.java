@@ -1,11 +1,15 @@
 package com.dangdang.check.domain.customer;
 
 import com.dangdang.check.domain.BaseEntity;
+import com.dangdang.check.domain.pet.Pet;
 import com.dangdang.check.domain.store.Store;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -23,5 +27,11 @@ public class Customer extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Pet> pets = new ArrayList<>();
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
+    private List<CustomerPhone> phones = new ArrayList<>();
 
 }
