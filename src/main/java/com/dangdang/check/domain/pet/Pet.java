@@ -4,6 +4,7 @@ import com.dangdang.check.domain.BaseEntity;
 import com.dangdang.check.domain.customer.Customer;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,4 +35,20 @@ public class Pet extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @Builder
+    public Pet(String name, Gender gender, Boolean neutered, Boolean vaccinated, String specialNotes, LocalDate birthday, Double weight, Breed breed) {
+        this.name = name;
+        this.gender = gender;
+        this.neutered = neutered;
+        this.vaccinated = vaccinated;
+        this.specialNotes = specialNotes;
+        this.birthday = birthday;
+        this.weight = weight;
+        this.breed = breed;
+    }
+
+    public void modifyCustomer(Customer customer) {
+        this.customer = customer;
+    }
 }
