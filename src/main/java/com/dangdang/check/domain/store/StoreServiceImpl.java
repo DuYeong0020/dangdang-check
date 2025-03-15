@@ -78,5 +78,6 @@ public class StoreServiceImpl implements StoreService {
 
         store.softDelete();
         businessInfo.softDelete();
+        businessInfo.modifyRegistrationStatus(RegistrationStatus.PENDING);
     }
 }
