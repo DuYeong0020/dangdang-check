@@ -19,3 +19,7 @@
 4. 두 개의 환경(Green & Blue) 운영
 - 새 버전 배포 시 기존 버전과 병렬로 실행
 - 정상 동작 확인 후 트래픽 전환  
+
+
+## ERD
+![Image](https://github.com/user-attachments/assets/51a7dbd1-9953-4e25-9ded-a2c70c327fc8)
