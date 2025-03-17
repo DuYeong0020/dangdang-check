@@ -34,6 +34,8 @@
 
 ### 개발 기간
 2025. 02 ~
+## 🚀 REST API 서비스 주소
+http://ec2-13-124-69-17.ap-northeast-2.compute.amazonaws.com/
 ## 🛠기술 스택
 ![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
@@ -46,8 +48,6 @@
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-
-
 
 ## ERD
 ![Image](https://github.com/user-attachments/assets/51a7dbd1-9953-4e25-9ded-a2c70c327fc8)
