@@ -7,7 +7,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +42,12 @@ public class Store extends BaseEntity {
 
     @Builder
     public Store(String name, Address address, String email, String mainPhone, Employee owner, BusinessInfo businessInfo) {
+        if (!StringUtils.hasText(name)) throw new InvalidParameterException();
+        if (address == null) throw new InvalidParameterException();
+        if (!StringUtils.hasText(mainPhone)) throw new InvalidParameterException();
+        if (owner == null) throw new InvalidParameterException();
+        if (businessInfo == null) throw new InvalidParameterException();
+
         this.name = name;
         this.address = address;
         this.email = email;

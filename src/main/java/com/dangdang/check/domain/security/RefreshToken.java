@@ -8,6 +8,9 @@ import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
+
+import java.security.InvalidParameterException;
 
 
 @Getter
@@ -23,6 +26,10 @@ public class RefreshToken extends BaseEntity {
     private String expiration;
 
     public RefreshToken(String loginId, String refreshToken, String expiration) {
+        if (!StringUtils.hasText(loginId)) throw new InvalidParameterException();
+        if (!StringUtils.hasText(refreshToken)) throw new InvalidParameterException();
+        if (!StringUtils.hasText(expiration)) throw new InvalidParameterException();
+
         this.loginId = loginId;
         this.refreshToken = refreshToken;
         this.expiration = expiration;

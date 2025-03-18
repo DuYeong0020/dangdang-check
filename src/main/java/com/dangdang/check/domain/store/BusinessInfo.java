@@ -6,6 +6,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
+
+import java.security.InvalidParameterException;
 
 @Getter
 @Entity
@@ -28,6 +31,14 @@ public class BusinessInfo extends BaseEntity {
 
     @Builder
     public BusinessInfo(String businessRegistrationNumber, String businessName, String representativeName, String businessType, Address businessAddress, RegistrationStatus registrationStatus) {
+        if (!StringUtils.hasText(businessRegistrationNumber)) throw new InvalidParameterException();
+        if (!StringUtils.hasText(businessName)) throw new InvalidParameterException();
+        if (!StringUtils.hasText(representativeName)) throw new InvalidParameterException();
+        if (!StringUtils.hasText(businessType)) throw new InvalidParameterException();
+        if (businessAddress == null) throw new InvalidParameterException();
+        if (registrationStatus == null) throw new InvalidParameterException();
+
+
         this.businessRegistrationNumber = businessRegistrationNumber;
         this.businessName = businessName;
         this.representativeName = representativeName;

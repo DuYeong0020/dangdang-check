@@ -7,7 +7,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDate;
 
 @Getter
@@ -38,6 +40,10 @@ public class Pet extends BaseEntity {
 
     @Builder
     public Pet(String name, Gender gender, Boolean neutered, Boolean vaccinated, String specialNotes, LocalDate birthday, Double weight, Breed breed) {
+        if (!StringUtils.hasText(name)) throw new InvalidParameterException();
+        if (vaccinated == null) throw new InvalidParameterException();
+        if (breed == null) throw new InvalidParameterException();
+
         this.name = name;
         this.gender = gender;
         this.neutered = neutered;
