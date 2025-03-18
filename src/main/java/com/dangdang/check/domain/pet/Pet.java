@@ -54,6 +54,47 @@ public class Pet extends BaseEntity {
         this.breed = breed;
     }
 
+
+    public void modifyName(String name) {
+        if (StringUtils.hasText(name)) {
+            this.name = name;
+        }
+    }
+
+    public void modifyGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public void modifyNeutered(Boolean neutered) {
+        this.neutered = neutered;
+    }
+
+    public void modifyVaccinated(Boolean vaccinated) {
+        if (vaccinated != null) {
+            this.vaccinated = vaccinated;
+        }
+    }
+
+    public void modifySpecialNotes(String specialNotes) {
+        this.specialNotes = specialNotes;
+    }
+
+    public void modifyBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public void modifyWeight(Double weight) {
+        if (weight != null && weight > 0) {
+            this.weight = weight;
+        }
+    }
+
+    public void modifyBreed(Breed breed) {
+        if (breed != null) {
+            this.breed = breed;
+        }
+    }
+
     public void modifyCustomer(Customer customer) {
         this.customer = customer;
     }
