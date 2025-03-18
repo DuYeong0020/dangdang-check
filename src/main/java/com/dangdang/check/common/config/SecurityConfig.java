@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -59,6 +60,11 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/api/employees",
                                 "/login", "/reissue")
                         .permitAll()
+                        .requestMatchers("/api/customers/**").hasAnyAuthority("GROOMER", "HEAD_GROOMER", "OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/stores").hasAuthority("DEFAULT")
+                        .requestMatchers(HttpMethod.GET, "/api/stores/{storeId}").hasAnyAuthority("DEFAULT", "OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/stores").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/stores/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
