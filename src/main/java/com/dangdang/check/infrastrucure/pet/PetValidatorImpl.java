@@ -5,7 +5,9 @@ import com.dangdang.check.domain.customer.Customer;
 import com.dangdang.check.domain.customer.CustomerReader;
 import com.dangdang.check.domain.employee.Employee;
 import com.dangdang.check.domain.employee.EmployeeReader;
+import com.dangdang.check.domain.pet.Pet;
 import com.dangdang.check.domain.pet.PetCommand;
+import com.dangdang.check.domain.pet.PetReader;
 import com.dangdang.check.domain.pet.PetValidator;
 import com.dangdang.check.domain.store.RegistrationStatus;
 import com.dangdang.check.domain.store.Store;
@@ -17,11 +19,23 @@ import org.springframework.stereotype.Component;
 public class PetValidatorImpl implements PetValidator {
     private final EmployeeReader employeeReader;
     private final CustomerReader customerReader;
+    private final PetReader petReader;
 
     @Override
     public void checkRegisterPet(PetCommand.RegisterPetRequest request) {
         Employee employee = employeeReader.findByLoginId(request.getEmployeeLoginId());
         Customer customer = customerReader.findById(request.getCustomerId());
+        checkEmployeeHasStore(employee);
+        checkStoreIsOpen(employee.getStore());
+        checkSameStore(customer, employee);
+    }
+
+    @Override
+    public void checkModifyPet(PetCommand.ModifyPetRequest request) {
+        Employee employee = employeeReader.findByLoginId(request.getEmployeeLoginId());
+        Customer customer = customerReader.findById(request.getCustomerId());
+        Pet pet = petReader.findById(request.getPetId());
+        checkSameCustomer(pet, customer);
         checkEmployeeHasStore(employee);
         checkStoreIsOpen(employee.getStore());
         checkSameStore(customer, employee);
@@ -48,6 +62,16 @@ public class PetValidatorImpl implements PetValidator {
 
         if (!customer.getStore().getId().equals(employee.getStore().getId())) {
             throw new UnauthorizedException("해당 고객의 펫을 등록할 권한이 없습니다.");
+        }
+    }
+
+    private void checkSameCustomer(Pet pet, Customer customer) {
+        if (pet.getCustomer() == null) {
+            throw new RuntimeException("펫의 소유자 정보가 없습니다.");
+        }
+
+        if (!pet.getCustomer().getId().equals(customer.getId())) {
+            throw new RuntimeException("잘못된 소유자 정보입니다.");
         }
     }
 }
