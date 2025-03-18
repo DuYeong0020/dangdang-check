@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,6 @@ public class CustomerDto {
 
         private String specialNotes;
 
-        @NotEmpty(message = "반려동물 정보는 최소 1개 이상이어야 합니다.")
         private List<@Valid PetRequest> petsRequest;
 
         public CustomerCommand.RegisterCustomerWithPetsRequest toCommand(String loginId) {
@@ -41,9 +41,11 @@ public class CustomerDto {
                     .phoneLabel(phoneLabel)
                     .phoneType(phoneType)
                     .specialNotes(specialNotes)
-                    .pets(petsRequest.stream()
+                    .pets(petsRequest != null ?
+                            petsRequest.stream()
                             .map(PetRequest::toCommand)
-                            .collect(Collectors.toList()))
+                            .collect(Collectors.toList())
+                            : Collections.emptyList())
                     .build();
         }
 
@@ -99,14 +101,16 @@ public class CustomerDto {
         public RegisterCustomerWithPetsResponse(CustomerInfo customerInfo) {
             this.id = customerInfo.getId();
             this.name = customerInfo.getName();
-            this.customerPhonesResponse = customerInfo.getPhones()
-                    .stream()
+            this.customerPhonesResponse = customerInfo.getPhones() != null
+                    ? customerInfo.getPhones().stream()
                     .map(CustomerPhoneResponse::new)
-                    .collect(Collectors.toList());
-            this.petsResponse = customerInfo.getPets()
-                    .stream()
+                    .collect(Collectors.toList())
+                    : Collections.emptyList();
+            this.petsResponse = customerInfo.getPets() != null
+                    ? customerInfo.getPets().stream()
                     .map(PetResponse::new)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList())
+                    : Collections.emptyList();
         }
 
         @Getter
