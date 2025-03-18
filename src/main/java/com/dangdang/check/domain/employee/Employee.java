@@ -7,6 +7,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
+
+import java.security.InvalidParameterException;
 
 @Getter
 @Entity
@@ -39,6 +42,12 @@ public class Employee extends BaseEntity {
 
     @Builder
     public Employee(String nickname, String loginId, String password, String email, String mobilePhone) {
+        if (!StringUtils.hasText(nickname)) throw new InvalidParameterException();
+        if (!StringUtils.hasText(loginId)) throw new InvalidParameterException();
+        if (!StringUtils.hasText(password)) throw new InvalidParameterException();
+        if (!StringUtils.hasText(email)) throw new InvalidParameterException();
+        if (!StringUtils.hasText(mobilePhone)) throw new InvalidParameterException();
+
         this.nickname = nickname;
         this.loginId = loginId;
         this.password = password;

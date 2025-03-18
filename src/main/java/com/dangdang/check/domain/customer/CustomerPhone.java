@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
+
+import java.security.InvalidParameterException;
 
 @Getter
 @Entity
@@ -25,6 +28,10 @@ public class CustomerPhone extends BaseEntity {
     private Customer customer;
 
     public CustomerPhone(String label, String phoneNumber, PhoneType phoneType) {
+        if (!StringUtils.hasText(label)) throw new InvalidParameterException();
+        if (!StringUtils.hasText(phoneNumber)) throw new InvalidParameterException();
+        if (phoneType == null) throw new InvalidParameterException();
+
         this.label = label;
         this.phoneNumber = phoneNumber;
         this.phoneType = phoneType;
