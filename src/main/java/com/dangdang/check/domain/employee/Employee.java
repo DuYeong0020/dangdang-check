@@ -36,6 +36,9 @@ public class Employee extends BaseEntity {
     private Store store;
 
     public Employee(String loginId, Role role) {
+        if (!StringUtils.hasText(loginId)) throw new InvalidParameterException();
+        if (role == null) throw new InvalidParameterException();
+
         this.loginId = loginId;
         this.role = role;
     }

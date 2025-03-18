@@ -45,8 +45,12 @@ public class CustomerCommand {
         }
 
         public String getCustomerNameOrDefault() {
-            return (customerName != null && !customerName.isBlank())
-                    ? customerName : pets.get(0).getName() + " 보호자";
+            if (customerName != null && !customerName.isBlank()) {
+                return customerName;
+            }
+            return (pets != null && !pets.isEmpty())
+                    ? pets.get(0).getName() + " 보호자"
+                    : "보호자";
         }
 
         public String getPhoneLabelOrDefault() {
