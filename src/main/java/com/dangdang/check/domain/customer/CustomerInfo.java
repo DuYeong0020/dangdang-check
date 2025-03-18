@@ -5,6 +5,7 @@ import com.dangdang.check.domain.pet.Species;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,12 +21,16 @@ public class CustomerInfo {
     public CustomerInfo(Customer customer) {
         this.id = customer.getId();
         this.name = customer.getName();
-        this.phones = customer.getPhones().stream()
+        this.phones = customer.getPhones() != null
+                ? customer.getPhones().stream()
                 .map(CustomerPhoneInfo::new)
-                .collect(Collectors.toList());
-        this.pets = customer.getPets().stream()
+                .collect(Collectors.toList())
+                : Collections.emptyList();
+        this.pets = customer.getPets() != null
+                ? customer.getPets().stream()
                 .map(PetInfo::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+                : Collections.emptyList();
     }
 
     @Getter
