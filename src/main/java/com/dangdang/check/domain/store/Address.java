@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
+
+import java.security.InvalidParameterException;
 
 @Getter
 @Embeddable
@@ -18,6 +21,11 @@ public class Address {
 
     @Builder
     public Address(String zipCode, String state, String city, String street, String detail) {
+        if (!StringUtils.hasText(zipCode)) throw new InvalidParameterException();
+        if (!StringUtils.hasText(state)) throw new InvalidParameterException();
+        if (!StringUtils.hasText(city)) throw new InvalidParameterException();
+        if (!StringUtils.hasText(street)) throw new InvalidParameterException();
+
         this.zipCode = zipCode;
         this.state = state;
         this.city = city;

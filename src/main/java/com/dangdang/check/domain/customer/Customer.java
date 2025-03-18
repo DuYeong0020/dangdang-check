@@ -8,7 +8,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,9 @@ public class Customer extends BaseEntity {
 
     @Builder
     public Customer(String name, String specialNotes, Store store) {
+        if (!StringUtils.hasText(name)) throw new InvalidParameterException();
+        if (store == null) throw new InvalidParameterException();
+
         this.name = name;
         this.specialNotes = specialNotes;
         this.store = store;

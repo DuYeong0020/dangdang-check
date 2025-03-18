@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
+
+import java.security.InvalidParameterException;
 
 @Getter
 @Entity
@@ -19,6 +22,9 @@ public class Breed extends BaseEntity {
     private Species species; // 종 (예: 개, 고양이)
 
     public Breed(String name, Species species) {
+        if (!StringUtils.hasText(name)) throw new InvalidParameterException();
+        if (species == null) throw new InvalidParameterException();
+
         this.name = name;
         this.species = species;
     }
