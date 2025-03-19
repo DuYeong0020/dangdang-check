@@ -17,7 +17,6 @@ public class CustomerCommand {
     @ToString
     public static class RegisterCustomerWithPetsRequest {
         private final String loginId;
-
         private final String customerName;
         private final String phoneNumber;
         private final String phoneLabel;
@@ -92,6 +91,23 @@ public class CustomerCommand {
                     .weight(weight)
                     .breed(breed)
                     .build();
+        }
+    }
+
+    @Getter
+    @ToString
+    public static class ModifyCustomerRequest {
+        private final String loginId;
+        private final Long customerId;
+        private final String name;
+        private final String specialNotes;
+
+        @Builder
+        public ModifyCustomerRequest(String loginId, Long customerId, String name, String specialNotes) {
+            this.loginId = loginId;
+            this.customerId = customerId;
+            this.name = name;
+            this.specialNotes = specialNotes;
         }
     }
 

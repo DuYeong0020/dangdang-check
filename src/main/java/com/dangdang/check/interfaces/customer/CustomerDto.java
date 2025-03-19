@@ -147,4 +147,36 @@ public class CustomerDto {
             }
         }
     }
+    @Getter
+    @ToString
+    public static class ModifyCustomerRequest {
+
+        @NotBlank(message = "보호자 이름은 필수입니다.")
+        private String name;
+
+        private String specialNotes;
+
+        public CustomerCommand.ModifyCustomerRequest toCommand(String loginId, Long customerId) {
+            return CustomerCommand.ModifyCustomerRequest.builder()
+                    .loginId(loginId)
+                    .customerId(customerId)
+                    .name(name)
+                    .specialNotes(specialNotes)
+                    .build();
+        }
+    }
+
+    @Getter
+    @ToString
+    public static class ModifyCustomerResponse {
+        private final Long id;
+        private final String name;
+        private final String specialNotes;
+
+        public ModifyCustomerResponse(CustomerInfo customerInfo) {
+            this.id = customerInfo.getId();
+            this.name = customerInfo.getName();
+            this.specialNotes = customerInfo.getSpecialNotes();
+        }
+    }
 }

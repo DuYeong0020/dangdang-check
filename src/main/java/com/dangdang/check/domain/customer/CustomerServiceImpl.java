@@ -15,6 +15,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerValidator customerValidator;
     private final EmployeeReader employeeReader;
     private final CustomerStore customerStore;
+    private final CustomerReader customerReader;
     private final PetStore petStore;
     private final BreedStore breedStore;
     private final BreedReader breedReader;
@@ -42,6 +43,17 @@ public class CustomerServiceImpl implements CustomerService {
             Pet pet = petStore.storePet(initPet);
             customer.addPet(pet);
         });
+
+        return new CustomerInfo(customer);
+    }
+
+    @Override
+    @Transactional
+    public CustomerInfo modifyCustomer(CustomerCommand.ModifyCustomerRequest request) {
+        customerValidator.checkModifyCustomer(request);
+        Customer customer = customerReader.findById(request.getCustomerId());
+        customer.modifyName(request.getName());
+        customer.modifySpecialNotes(request.getSpecialNotes());
 
         return new CustomerInfo(customer);
     }
