@@ -22,6 +22,11 @@ public class CustomerDto {
 
         private String customerName;
 
+        @NotBlank(message = "전화번호는 필수 입력 값입니다.")
+        @Pattern(
+                regexp = "^(0\\d{1,2}\\d{3,4}\\d{4}|01[016789]\\d{7,8})$",
+                message = "올바른 전화번호 형식이 아닙니다. (예: 0212345678 또는 01012345678)"
+        )
         private String phoneNumber;
 
         private String phoneLabel;
