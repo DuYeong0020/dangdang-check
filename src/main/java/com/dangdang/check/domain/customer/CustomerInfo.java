@@ -15,12 +15,14 @@ import java.util.stream.Collectors;
 public class CustomerInfo {
     private final Long id;
     private final String name;
+    private final String specialNotes;
     private final List<CustomerPhoneInfo> phones;
     private final List<PetInfo> pets;
 
     public CustomerInfo(Customer customer) {
         this.id = customer.getId();
         this.name = customer.getName();
+        this.specialNotes = customer.getSpecialNotes();
         this.phones = customer.getPhones() != null
                 ? customer.getPhones().stream()
                 .map(CustomerPhoneInfo::new)
