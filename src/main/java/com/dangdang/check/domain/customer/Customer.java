@@ -57,4 +57,13 @@ public class Customer extends BaseEntity {
         pet.modifyCustomer(this);
     }
 
+    public void modifyName(String name) {
+        if (StringUtils.hasText(name)) {
+            this.name = name;
+        }
+    }
+
+    public void modifySpecialNotes(String specialNotes) {
+        this.specialNotes = specialNotes;
+    }
 }
