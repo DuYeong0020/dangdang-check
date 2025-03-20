@@ -37,6 +37,25 @@ public class CustomerPhone extends BaseEntity {
         this.phoneType = phoneType;
     }
 
+    public void modifyLabel(String label) {
+        if (StringUtils.hasText(label)) {
+            this.label = label;
+        }
+    }
+
+    public void modifyPhoneNumber(String phoneNumber) {
+        if (StringUtils.hasText(phoneNumber)) {
+            this.phoneNumber = phoneNumber;
+        }
+
+    }
+
+    public void modifyPhoneType(PhoneType phoneType) {
+        if (phoneType != null) {
+            this.phoneType = phoneType;
+        }
+    }
+
     public void modifyCustomer(Customer customer) {
         this.customer = customer;
     }
