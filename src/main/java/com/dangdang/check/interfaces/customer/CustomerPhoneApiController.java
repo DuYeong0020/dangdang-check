@@ -26,4 +26,13 @@ public class CustomerPhoneApiController {
         CustomerPhoneDto.RegisterCustomerPhoneResponse response = new CustomerPhoneDto.RegisterCustomerPhoneResponse(phoneInfo);
         return CommonResponse.success(response);
     }
+
+    @PostMapping("/api/customers/{customerId}/phones/{phoneId}")
+    public CommonResponse<CustomerPhoneDto.ModifyCustomerPhoneResponse> modifyCustomerPhone(@Login String loginId, @PathVariable Long customerId, @PathVariable Long phoneId,
+                                                                                             @RequestBody @Valid CustomerPhoneDto.ModifyCustomerPhoneRequest request) {
+        CustomerPhoneCommand.ModifyCustomerPhoneRequest command = request.toCommand(loginId, customerId, phoneId);
+        CustomerPhoneInfo phoneInfo = customerPhoneService.modifyCustomerPhone(command);
+        CustomerPhoneDto.ModifyCustomerPhoneResponse response = new CustomerPhoneDto.ModifyCustomerPhoneResponse(phoneInfo);
+        return CommonResponse.success(response);
+    }
 }
