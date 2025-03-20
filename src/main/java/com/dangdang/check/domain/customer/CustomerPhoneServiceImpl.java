@@ -10,6 +10,7 @@ public class CustomerPhoneServiceImpl implements CustomerPhoneService {
 
     private final CustomerPhoneValidator customerPhoneValidator;
     private final CustomerPhoneStore customerPhoneStore;
+    private final CustomerPhoneReader customerPhoneReader;
     private final CustomerReader customerReader;
 
 
@@ -25,5 +26,15 @@ public class CustomerPhoneServiceImpl implements CustomerPhoneService {
         return new CustomerPhoneInfo(customerPhone);
     }
 
+    @Override
+    @Transactional
+    public CustomerPhoneInfo modifyCustomerPhone(CustomerPhoneCommand.ModifyCustomerPhoneRequest request) {
+        customerPhoneValidator.checkModifyCustomerPhone(request);
+        CustomerPhone customerPhone = customerPhoneReader.findById(request.getCustomerPhoneId());
+        customerPhone.modifyPhoneNumber(request.getPhoneNumber());
+        customerPhone.modifyPhoneType(request.getPhoneType());
+        customerPhone.modifyLabel(request.getLabel());
 
+        return new CustomerPhoneInfo(customerPhone);
+    }
 }
