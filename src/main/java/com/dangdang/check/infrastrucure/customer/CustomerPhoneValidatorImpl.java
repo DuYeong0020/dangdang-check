@@ -8,6 +8,7 @@ import com.dangdang.check.domain.store.RegistrationStatus;
 import com.dangdang.check.domain.store.Store;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -30,8 +31,20 @@ public class CustomerPhoneValidatorImpl implements CustomerPhoneValidator {
         checkDuplicatePhoneNumber(phones, request.getPhoneNumber());
     }
 
+    @Override
+    public void checkModifyCustomerPhone(CustomerPhoneCommand.ModifyCustomerPhoneRequest request) {
+        Employee employee = employeeReader.findByLoginId(request.getLoginId());
+        Customer customer = customerReader.findById(request.getCustomerId());
+        List<CustomerPhone> phones = customer.getPhones();
+
+        checkEmployeeHasStore(employee);
+        checkStoreIsOpen(employee.getStore());
+        checkSameStore(customer, employee);
+        checkDuplicatePhoneNumber(phones, request.getPhoneNumber());
+    }
+
     private void checkDuplicatePhoneNumber(List<CustomerPhone> phones, String phoneNumber) {
-        if (phones == null || phones.isEmpty()) {
+        if (CollectionUtils.isEmpty(phones)) {
             return;
         }
 

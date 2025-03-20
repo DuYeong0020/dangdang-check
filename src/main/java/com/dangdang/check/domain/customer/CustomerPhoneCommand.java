@@ -28,4 +28,25 @@ public class CustomerPhoneCommand {
             return (label != null && !label.isBlank()) ? label : "보호자";
         }
     }
+
+    @Getter
+    @ToString
+    public static class ModifyCustomerPhoneRequest {
+        private final String loginId;
+        private final Long customerId;
+        private final Long customerPhoneId;
+        private final String label;
+        private final String phoneNumber;
+        private final PhoneType phoneType;
+
+        @Builder
+        public ModifyCustomerPhoneRequest(String loginId, Long customerId, Long customerPhoneId, String label, String phoneNumber, PhoneType phoneType) {
+            this.loginId = loginId;
+            this.customerId = customerId;
+            this.customerPhoneId = customerPhoneId;
+            this.label = label;
+            this.phoneNumber = phoneNumber;
+            this.phoneType = phoneType;
+        }
+    }
 }
