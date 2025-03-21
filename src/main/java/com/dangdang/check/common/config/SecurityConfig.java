@@ -60,11 +60,12 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/api/employees",
                                 "/login", "/reissue")
                         .permitAll()
-                        .requestMatchers("/api/customers/**").hasAnyAuthority("GROOMER", "HEAD_GROOMER", "OWNER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/stores").hasAuthority("DEFAULT")
-                        .requestMatchers(HttpMethod.GET, "/api/stores/{storeId}").hasAnyAuthority("DEFAULT", "OWNER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/stores").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/stores/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/stores/{storeId}").hasAnyAuthority("DEFAULT", "OWNER", "ADMIN")
+                        .requestMatchers("/api/customers/**").hasAnyAuthority("GROOMER", "HEAD_GROOMER", "OWNER", "ADMIN")
+                        .requestMatchers("/api/grooming-reservations/**").hasAnyAuthority("GROOMER", "HEAD_GROOMER", "OWNER", "ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
