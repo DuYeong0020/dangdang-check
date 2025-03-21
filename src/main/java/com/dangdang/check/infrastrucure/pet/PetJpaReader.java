@@ -6,6 +6,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Iterator;
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class PetJpaReader implements PetReader {
@@ -16,5 +19,10 @@ public class PetJpaReader implements PetReader {
     public Pet findById(Long id) {
         return petJpaRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    public List<Pet> findAllById(List<Long> ids) {
+        return petJpaRepository.findAllByIdInAndIsDeletedFalse(ids);
     }
 }
