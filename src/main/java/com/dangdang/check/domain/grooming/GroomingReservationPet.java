@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.security.InvalidParameterException;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,4 +25,17 @@ public class GroomingReservationPet {
     @JoinColumn(name = "pet_id", nullable = false)
     private Pet pet;
 
+    public GroomingReservationPet(GroomingReservation groomingReservation, Pet pet) {
+        if (groomingReservation == null) throw new InvalidParameterException();
+        if (pet == null) throw new InvalidParameterException();
+
+        this.groomingReservation = groomingReservation;
+        this.pet = pet;
+    }
+
+    public void addGroomingReservation(GroomingReservation groomingReservation) {
+        if (groomingReservation != null) {
+            this.groomingReservation = groomingReservation;
+        }
+    }
 }
