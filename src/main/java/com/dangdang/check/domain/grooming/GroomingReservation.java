@@ -6,8 +6,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -33,4 +37,26 @@ public class GroomingReservation extends BaseEntity {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @OneToMany(mappedBy = "groomingReservation")
+    private List<GroomingReservationPet> groomingReservationPets = new ArrayList<>();
+
+    public GroomingReservation(String title, String groomingRequest, LocalDateTime startAt, LocalDateTime endAt, ReservationStatus reservationStatus, Customer customer) {
+        if (!StringUtils.hasText(title)) throw new InvalidParameterException();
+        if (startAt == null) throw new InvalidParameterException();
+        if (endAt == null) throw new InvalidParameterException();
+        if (reservationStatus == null) throw new InvalidParameterException();
+        if (customer == null) throw new InvalidParameterException();
+
+        this.title = title;
+        this.groomingRequest = groomingRequest;
+        this.startAt = startAt;
+        this.endAt = endAt;
+        this.reservationStatus = reservationStatus;
+        this.customer = customer;
+    }
+
+    public void addGroomingReservationPet(GroomingReservationPet groomingReservationPet) {
+        groomingReservationPets.add(groomingReservationPet);
+        groomingReservationPet.addGroomingReservation(this);
+    }
 }
