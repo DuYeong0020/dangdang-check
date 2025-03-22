@@ -37,8 +37,9 @@ public class GroomingReservationDto {
         @NotEmpty(message = "최소한 한 마리 이상의 반려견을 선택해야 합니다.")
         private List<Long> petIds;
 
-        public GroomingReservationCommand.RegisterGroomingReservationRequest toCommand() {
+        public GroomingReservationCommand.RegisterGroomingReservationRequest toCommand(String loginId) {
             return GroomingReservationCommand.RegisterGroomingReservationRequest.builder()
+                    .employeeLoginId(loginId)
                     .title(title)
                     .groomingRequest(groomingRequest)
                     .startAt(startAt)
