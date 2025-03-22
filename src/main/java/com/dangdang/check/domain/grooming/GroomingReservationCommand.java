@@ -12,6 +12,8 @@ public class GroomingReservationCommand {
     @Getter
     @ToString
     public static class RegisterGroomingReservationRequest {
+
+        private final String employeeLoginId;
         private final String title;
         private final String groomingRequest;
         private final LocalDateTime startAt;
@@ -20,7 +22,8 @@ public class GroomingReservationCommand {
         private final List<Long> petIds;
 
         @Builder
-        public RegisterGroomingReservationRequest(String title, String groomingRequest, LocalDateTime startAt, LocalDateTime endAt, Long customerId, List<Long> petIds) {
+        public RegisterGroomingReservationRequest(String employeeLoginId, String title, String groomingRequest, LocalDateTime startAt, LocalDateTime endAt, Long customerId, List<Long> petIds) {
+            this.employeeLoginId = employeeLoginId;
             this.title = title;
             this.groomingRequest = groomingRequest;
             this.startAt = startAt;
