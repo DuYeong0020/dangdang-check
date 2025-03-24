@@ -5,7 +5,9 @@ import com.dangdang.check.domain.customer.Customer;
 import com.dangdang.check.domain.customer.CustomerReader;
 import com.dangdang.check.domain.employee.Employee;
 import com.dangdang.check.domain.employee.EmployeeReader;
+import com.dangdang.check.domain.grooming.GroomingReservation;
 import com.dangdang.check.domain.grooming.GroomingReservationCommand;
+import com.dangdang.check.domain.grooming.GroomingReservationReader;
 import com.dangdang.check.domain.grooming.GroomingReservationValidator;
 import com.dangdang.check.domain.pet.Pet;
 import com.dangdang.check.domain.pet.PetReader;
@@ -24,6 +26,7 @@ public class GroomingReservationValidatorImpl implements GroomingReservationVali
     private final PetReader petReader;
     private final CustomerReader customerReader;
     private final EmployeeReader employeeReader;
+    private final GroomingReservationReader groomingReservationReader;
 
     @Override
     public void checkRegisterGroomingReservation(GroomingReservationCommand.RegisterGroomingReservationRequest request) {
@@ -34,6 +37,32 @@ public class GroomingReservationValidatorImpl implements GroomingReservationVali
         checkSameStore(customer, employee);
         checkPetsBelongToCustomer(request.getPetIds(), request.getCustomerId());
         checkReservationTimeValid(request.getStartAt(), request.getEndAt());
+    }
+
+    @Override
+    public void checkModifyGroomingReservation(GroomingReservationCommand.ModifyGroomingReservationRequest request) {
+        Employee employee = employeeReader.findByLoginId(request.getEmployeeLoginId());
+        checkEmployeeHasStore(employee);
+        checkStoreIsOpen(employee.getStore());
+
+        GroomingReservation reservation = groomingReservationReader.findById(request.getGroomingReservationId());
+        Long existingCustomerId = reservation.getCustomer().getId();
+
+
+        if (request.getCustomerId() == null || existingCustomerId.equals(request.getCustomerId())) {
+            // 기존 customerId가 동일하다면, 새로 추가된 pet들이 기존 고객의 것인지 확인
+            checkPetsBelongToCustomer(request.getPetIds(), existingCustomerId);
+        } else {
+            // 만약 새 customerId가 추가되었다면 직원과 같은 가게인지 체크
+            Customer newCustomer = customerReader.findById(request.getCustomerId());
+            checkSameStore(newCustomer, employee);
+            checkPetsBelongToCustomer(request.getPetIds(), request.getCustomerId());
+        }
+        // 예약 시간 검증
+        LocalDateTime startAt = request.getStartAt() != null ? request.getStartAt() : reservation.getStartAt();
+        LocalDateTime endAt = request.getEndAt() != null ? request.getEndAt() : reservation.getEndAt();
+        checkReservationTimeValid(startAt, endAt);
+
     }
 
     private void checkStoreIsOpen(Store store) {
@@ -62,6 +91,7 @@ public class GroomingReservationValidatorImpl implements GroomingReservationVali
 
     private void checkPetsBelongToCustomer(List<Long> petIds, Long customerId) {
         List<Pet> pets = petReader.findAllById(petIds);
+        System.out.println("pets = " + pets);
 
         boolean allOwned = pets.stream()
                 .allMatch(pet -> pet.getCustomer().getId().equals(customerId));

@@ -7,10 +7,7 @@ import com.dangdang.check.domain.customer.CustomerPhoneInfo;
 import com.dangdang.check.domain.customer.CustomerPhoneService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +24,7 @@ public class CustomerPhoneApiController {
         return CommonResponse.success(response);
     }
 
-    @PostMapping("/api/customers/{customerId}/phones/{phoneId}")
+    @PatchMapping("/api/customers/{customerId}/phones/{phoneId}")
     public CommonResponse<CustomerPhoneDto.ModifyCustomerPhoneResponse> modifyCustomerPhone(@Login String loginId, @PathVariable Long customerId, @PathVariable Long phoneId,
                                                                                              @RequestBody @Valid CustomerPhoneDto.ModifyCustomerPhoneRequest request) {
         CustomerPhoneCommand.ModifyCustomerPhoneRequest command = request.toCommand(loginId, customerId, phoneId);

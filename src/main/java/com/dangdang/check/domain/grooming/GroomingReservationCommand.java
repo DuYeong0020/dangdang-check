@@ -32,4 +32,32 @@ public class GroomingReservationCommand {
             this.petIds = petIds;
         }
     }
+
+    @Getter
+    @ToString
+    public static class ModifyGroomingReservationRequest {
+
+        private final String employeeLoginId;
+        private final Long groomingReservationId;
+        private final String title;
+        private final String groomingRequest;
+        private final LocalDateTime startAt;
+        private final LocalDateTime endAt;
+        private final ReservationStatus reservationStatus;
+        private final Long customerId;
+        private final List<Long> petIds;
+
+        @Builder
+        public ModifyGroomingReservationRequest(String employeeLoginId, Long groomingReservationId, String title, String groomingRequest, LocalDateTime startAt, LocalDateTime endAt, ReservationStatus reservationStatus, Long customerId, List<Long> petIds) {
+            this.employeeLoginId = employeeLoginId;
+            this.groomingReservationId = groomingReservationId;
+            this.title = title;
+            this.groomingRequest = groomingRequest;
+            this.startAt = startAt;
+            this.endAt = endAt;
+            this.reservationStatus = reservationStatus;
+            this.customerId = customerId;
+            this.petIds = petIds;
+        }
+    }
 }

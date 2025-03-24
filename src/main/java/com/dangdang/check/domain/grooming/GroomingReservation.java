@@ -55,6 +55,43 @@ public class GroomingReservation extends BaseEntity {
         this.customer = customer;
     }
 
+    public void modifyTitle(String title) {
+        if (StringUtils.hasText(title)) {
+            this.title = title;
+        }
+
+    }
+
+    public void modifyGroomingRequest(String groomingRequest) {
+        if (groomingRequest != null) {
+            this.groomingRequest = groomingRequest;
+        }
+    }
+
+    public void modifyStartAt(LocalDateTime startAt) {
+        if (startAt != null) {
+            this.startAt = startAt;
+        }
+    }
+
+    public void modifyEndAt(LocalDateTime endAt) {
+        if (endAt != null) {
+            this.endAt = endAt;
+        }
+    }
+
+    public void modifyReservationStatus(ReservationStatus reservationStatus) {
+        if (reservationStatus != null) {
+            this.reservationStatus = reservationStatus;
+        }
+    }
+
+    public void modifyCustomer(Customer customer) {
+        if (customer != null) {
+            this.customer = customer;
+        }
+    }
+
     public void addGroomingReservationPet(GroomingReservationPet groomingReservationPet) {
         groomingReservationPets.add(groomingReservationPet);
         groomingReservationPet.addGroomingReservation(this);
