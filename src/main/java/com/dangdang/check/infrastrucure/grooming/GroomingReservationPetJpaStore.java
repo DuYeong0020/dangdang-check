@@ -15,4 +15,9 @@ public class GroomingReservationPetJpaStore implements GroomingReservationPetSto
     public GroomingReservationPet storeGroomingReservationPet(GroomingReservationPet groomingReservationPet) {
         return groomingReservationPetJpaRepository.save(groomingReservationPet);
     }
+
+    @Override
+    public void hardDelete(GroomingReservationPet groomingReservationPet) {
+        groomingReservationPetJpaRepository.delete(groomingReservationPet);
+    }
 }
